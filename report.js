@@ -39,8 +39,6 @@ const runAutomationChecks = () => {
         }
 
         try {
-            function __probe__(a, b) { }
-
             record('objectToString', [
                 Object.prototype.toString({}),
                 Object.prototype.toString(target)
