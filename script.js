@@ -56,13 +56,18 @@ const isAutomated = () => {
             return true;
         }
 
-        if (desc.enumerable) {
-            alert('Enumerable=true (unexpected)');
+        if (!desc.configurable) {
+            alert('configurable=false (unexpected)');
+            return true;
+        }
+        
+        if (!desc.enumerable) {
+            alert('Enumerable=false (unexpected)');
             return true;
         }
 
-        if (desc.writable && desc.configurable) {
-            alert('Writable & configurable (common in replacements)');
+        if (!desc.writable) {
+            alert('Writable=false (unexpected)');
             return true;
         }
     } catch {
