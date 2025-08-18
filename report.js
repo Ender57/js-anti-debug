@@ -140,4 +140,7 @@ const runAutomationChecks = () => {
     }
 }
 
-alert(runAutomationChecks());
+const r = runAutomationChecks();
+
+console.log(r);
+alert(JSON.stringify(r));
