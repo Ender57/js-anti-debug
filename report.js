@@ -140,4 +140,4 @@ const runAutomationChecks = () => {
     }
 }
 
-alert(isAutomated());
+alert(runAutomationChecks());
