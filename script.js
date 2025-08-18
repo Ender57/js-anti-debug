@@ -6,7 +6,7 @@ const safeFunctionToString = target => {
 
         const s = toString.call(__probe__);
 
-        if (/\[native code\]/.test(s) || s.indexOf('__probe__') === -1) {
+        if (/\[native code\]/.test(s) || s.indexOf(__probe__.name) === -1) {
             alert('Function.prototype.toString overridden');
             return null;
         }
