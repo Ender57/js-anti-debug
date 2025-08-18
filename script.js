@@ -158,4 +158,5 @@ function runAntiDebugSuite() {
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log(runAntiDebugSuite());
+  console.log(Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState').get.call(document));
 });
