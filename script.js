@@ -101,6 +101,7 @@ const isAutomated = () => {
     const data = Array.from({ length: 50 }, () => Object.fromEntries(Array.from({ length: 500 }, (_, i) => [String(i), String(i)])));
     const now = Date.now();
     console.table(data);
+    console.clear();
     return Date.now() - now > 10;
 }
 
