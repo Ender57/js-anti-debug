@@ -1,50 +1,3 @@
-const safeFunctionToString = target => {
-    try {
-        const toString = Function.prototype.toString;
-
-        function __probe__(a, b) { }
-
-        const s = toString.call(__probe__);
-
-        if (/\[native code\]/.test(s) || s.indexOf(__probe__.name) === -1) {
-            return null;
-        }
-
-        return toString.call(target);
-    } catch {
-        return null;
-    }
-}
-
-const safeObjectToString = target => {
-    try {
-        const toString = Object.prototype.toString;
-        const tag = toString.call({});
-
-        if (tag !== '[object Object]') {
-            return null;
-        }
-
-        return toString.call(target);
-    } catch {
-        return null;
-    }
-}
-
-const safeHasOwnProperty = (target, propertyKey) => {
-    try {
-        const hasOwnProperty = Object.prototype.hasOwnProperty;
-
-        if (!hasOwnProperty.call({ x: 1 }, 'x')) {
-            return null;
-        }
-
-        return hasOwnProperty.call(target, propertyKey);
-    } catch {
-        return null;
-    }
-}
-
 const runAutomationChecks = () => {
     try {
         const results = {};
@@ -60,21 +13,42 @@ const runAutomationChecks = () => {
         record('isFunction', typeof target === 'function');
 
         try {
-            record('hasOwnProperty', Object.prototype.hasOwnProperty(target, 'toString'));
+
         } catch (e) {
             record('hasOwnProperty_error', String(e?.message || e));
         }
 
-        record('safeHasOwnProperty', safeHasOwnProperty(target, 'toString'));
+        try {
+            record('hasOwnProperty', [
+                Object.prototype.hasOwnProperty({ x: 1 }, 'x'),
+                Object.prototype.hasOwnProperty(target, 'toString')
+            ]);
+        } catch (e) {
+            record('hasOwnProperty_error', String(e?.message || e));
+        }
 
         try {
-            record('functionToString', Function.prototype.toString(target));
+            function __probe__(a, b) { }
+
+            record('functionToString', [
+                Function.prototype.toString(__probe__),
+                Function.prototype.toString(target)
+            ]);
         } catch (e) {
             record('functionToString_error', String(e?.message || e));
         }
 
-        record('safeFunctionToString', typeof target === 'function' ? safeFunctionToString(target) : null);
-        record('safeObjectToString', typeof target === 'function' ? safeObjectToString(target) : null);
+        try {
+            function __probe__(a, b) { }
+
+            record('objectToString', [
+                Object.prototype.toString({}),
+                Object.prototype.toString(target)
+            ]);
+        } catch (e) {
+            record('objectToString_error', String(e?.message || e));
+        }
+
         record('name', typeof target === 'function' && target.name === 'table');
 
         let desc = null;
