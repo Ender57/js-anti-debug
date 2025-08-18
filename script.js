@@ -42,15 +42,9 @@ const isAutomated = () => {
     }
 
     const name = target.name;
-    const length = target.length;
 
-    if (!name || name.toLowerCase() !== 'table') {
+    if (!name || name !== 'table') {
         alert('Unexpected name: ' + JSON.stringify(name));
-        return true;
-    }
-
-    if (length === 0) {
-        alert('Suspicious length: 0');
         return true;
     }
 
