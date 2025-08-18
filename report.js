@@ -13,12 +13,6 @@ const runAutomationChecks = () => {
         record('isFunction', typeof target === 'function');
 
         try {
-
-        } catch (e) {
-            record('hasOwnProperty_error', String(e?.message || e));
-        }
-
-        try {
             record('hasOwnProperty', [
                 Object.prototype.hasOwnProperty.call({ x: 1 }, 'x'),
                 Object.prototype.hasOwnProperty.call(target, 'toString')
