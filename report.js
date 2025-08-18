@@ -20,8 +20,8 @@ const runAutomationChecks = () => {
 
         try {
             record('hasOwnProperty', [
-                Object.prototype.hasOwnProperty({ x: 1 }, 'x'),
-                Object.prototype.hasOwnProperty(target, 'toString')
+                Object.prototype.hasOwnProperty.call({ x: 1 }, 'x'),
+                Object.prototype.hasOwnProperty.call(target, 'toString')
             ]);
         } catch (e) {
             record('hasOwnProperty_error', String(e?.message || e));
@@ -31,8 +31,8 @@ const runAutomationChecks = () => {
             function __probe__(a, b) { }
 
             record('functionToString', [
-                Function.prototype.toString(__probe__),
-                Function.prototype.toString(target)
+                Function.prototype.toString.call(__probe__),
+                Function.prototype.toString.call(target)
             ]);
         } catch (e) {
             record('functionToString_error', String(e?.message || e));
@@ -40,8 +40,8 @@ const runAutomationChecks = () => {
 
         try {
             record('objectToString', [
-                Object.prototype.toString({}),
-                Object.prototype.toString(target)
+                Object.prototype.toString.call({}),
+                Object.prototype.toString.call(target)
             ]);
         } catch (e) {
             record('objectToString_error', String(e?.message || e));
