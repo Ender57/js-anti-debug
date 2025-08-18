@@ -1,8 +1,57 @@
-const isAutomated = () => {
-    const safeFnToString = Function.prototype.toString;
-    const safeObjToString = Object.prototype.toString;
-    const hasOwn = Object.prototype.hasOwnProperty;
+const safeFunctionToString = target => {
+    try {
+        const toString = Function.prototype.toString;
 
+        function __probe__(a, b) { }
+
+        const s = toString.call(__probe__);
+
+        if (/\[native code\]/.test(s) || s.indexOf('__probe__') === -1) {
+            alert('Function.prototype.toString overridden');
+            return null;
+        }
+
+        return toString.call(target);
+    } catch {
+        alert('Function.prototype.toString broken');
+        return null;
+    }
+}
+
+const safeObjectToString = target => {
+    try {
+        const toString = Object.prototype.toString;
+        const tag = toString.call({});
+
+        if (tag !== '[object Object]') {
+            alert('Object.prototype.toString overridden');
+            return null;
+        }
+
+        return toString.call(target);
+    } catch {
+        alert('Object.prototype.toString broken');
+        return null;
+    }
+}
+
+const safeHasOwnProperty = (target, propertyKey) => {
+    try {
+        const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+        if (!hasOwnProperty.call({ x: 1 }, 'x')) {
+            alert('Object.prototype.hasOwnProperty overridden');
+            return null;
+        }
+
+        return hasOwnProperty.call(target, propertyKey);
+    } catch {
+        alert('Object.prototype.hasOwnProperty broken');
+        return null;
+    }
+}
+
+const isAutomated = () => {
     const target = console && console.table;
 
     if (!target) {
@@ -15,7 +64,7 @@ const isAutomated = () => {
         return true;
     }
 
-    if (hasOwn.call(target, 'toString')) {
+    if (safeHasOwnProperty(target, 'toString')) {
         alert('Own toString present (spoofing attempt)');
         return true;
     }
@@ -23,7 +72,7 @@ const isAutomated = () => {
     let realSource = '';
 
     try {
-        realSource = safeFnToString.call(target);
+        realSource = safeFunctionToString(target);
 
         if (!/\{\s*\[native code\]\s*\}/.test(realSource)) {
             alert('Real source does not look native');
@@ -34,7 +83,7 @@ const isAutomated = () => {
         return true;
     }
 
-    const tag = safeObjToString.call(target);
+    const tag = safeObjectToString(target);
 
     if (tag !== '[object Function]') {
         alert('Unexpected object tag: ' + tag);
@@ -60,7 +109,7 @@ const isAutomated = () => {
             alert('configurable=false (unexpected)');
             return true;
         }
-        
+
         if (!desc.enumerable) {
             alert('Enumerable=false (unexpected)');
             return true;
@@ -76,7 +125,7 @@ const isAutomated = () => {
     }
 
     try {
-        const refSrc = safeFnToString.call(console.log);
+        const refSrc = safeFunctionToString(console.log);
         const refLooksNative = /\{\s*\[native code\]\s*\}/.test(refSrc);
         const tgtLooksNative = /\{\s*\[native code\]\s*\}/.test(realSource);
         if (refLooksNative && !tgtLooksNative) {
