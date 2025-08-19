@@ -1,3 +1,50 @@
+const safeFunctionToString = target => {
+    try {
+        const toString = Function.prototype.toString;
+
+        function __probe__(a, b) { }
+
+        const s = toString.call(__probe__);
+
+        if (/\[native code\]/.test(s) || s.indexOf(__probe__.name) === -1) {
+            return null;
+        }
+
+        return toString.call(target);
+    } catch {
+        return null;
+    }
+}
+
+const safeObjectToString = target => {
+    try {
+        const toString = Object.prototype.toString;
+
+        if (toString.call({}) !== '[object Object]') {
+            return null;
+        }
+
+        return toString.call(target);
+    } catch {
+        return null;
+    }
+}
+
+const safeHasOwnProperty = (target, propertyKey) => {
+    try {
+        const hasOwnProperty = Object.prototype.hasOwnProperty;
+        const obj = { o5wsdsn9rq: 1 };
+
+        if (!hasOwnProperty.call(obj, 'o5wsdsn9rq') || hasOwnProperty.call(obj, 'lai4yygjxq')) {
+            return null;
+        }
+
+        return hasOwnProperty.call(target, propertyKey);
+    } catch {
+        return null;
+    }
+}
+
 const tamperCheck = () => {
     const maxTouchPoints = navigator.maxTouchPoints;
 
@@ -34,7 +81,7 @@ const tamperCheck = () => {
         o5wsdsn9rq: 1
     };
 
-    if (!hasOwnProperty.call(obj, 'o5wsdsn9rq') || hasOwnProperty.call(obj, 'lai4yygjxq')) {
+    if (safeHasOwnProperty(target, 'toString')) {
         return true;
     }
 
