@@ -1,8 +1,8 @@
 const tamperCheck = () => {
     const maxTouchPoints = navigator.maxTouchPoints;
 
-    if (typeof maxTouchPoints === 'number') {
-        return maxTouchPoints > 1;
+    if (typeof maxTouchPoints === 'number' && maxTouchPoints > 1) {
+        return false;
     }
 
     const userAgent = navigator.userAgent;
